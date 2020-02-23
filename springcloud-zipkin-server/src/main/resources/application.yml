@@ -1,0 +1,17 @@
+server:
+  port: 8075
+
+spring:
+  application:
+    name: zipkin-server
+  main:
+    allow-bean-definition-overriding:  true
+  
+management:
+  metrics:
+    web:
+     server:
+        request:
+          autotime:
+            enabled: false #高版本需要该配置
+

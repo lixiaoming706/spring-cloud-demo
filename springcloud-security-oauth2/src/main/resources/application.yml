@@ -1,0 +1,19 @@
+server:
+  port: 8081
+  
+debug: true  
+
+spring:
+  resources:
+    static-locations: classpath:/css/,classpath:/static/
+  
+
+#security:
+#  oauth2:
+#    client:
+#      client-id: appId
+#      client-secret: 123
+#      access-token-uri: http:localhost:8081/oauth/token
+#      user-authorization-uri: http:localhost:8081/oauth/authorize
+#    resource:
+#      user-info-uri: http:localhost:8081/oauth/check_token

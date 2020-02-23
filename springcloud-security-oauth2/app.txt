@@ -1,0 +1,103 @@
+1）、lombok的应用
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Accessors(chain = true)
+
+2）、swagger的应用。
+
+	@ApiModel(description = "用户表")
+	@ApiModelProperty("用户名")
+	
+3）、	单体应用认证授权框架----->SpringSecurity
+	1)、拦截器链。
+		WebAsyncManagerIntegrationFilter
+		SecurityContextPersistenceFilter
+		HeaderWriterFilter
+		CsrfFilter
+		LogoutFilter
+		UsernamePasswordAuthenticationFilter
+		DefaultLoginPageGeneratingFilter
+		DefaultLogoutPageGeneratingFilter
+		RequestCacheAwareFilter
+		SecurityContextHolderAwareRequestFilter
+		AnonymousAuthenticationFilter
+		SessionManagementFilter
+		ExceptionTranslationFilter
+		FilterSecurityInterceptor
+		
+		
+	UsernamePasswordAuthenticationToken authRequest 
+			= new UsernamePasswordAuthenticationToken(username, password);	
+			
+			
+	源码分析：(WebSecurity)
+	
+		1）、Map<String, WebSecurityConfigurer> beansOfType = beanFactory
+				.getBeansOfType(WebSecurityConfigurer.class); //获取配置的WebSecurityConfigurerAdapter的web配置类
+		2）、代码扩展SpEl注解式的写法：
+			@Value("#{@autowiredWebSecurityConfigurersIgnoreParents.getWebSecurityConfigurers()}")
+				 List<SecurityConfigurer<Filter, WebSecurity>> webSecurityConfigurers)	
+		3）、authenticationManager  //认证管理器（默认是基于内存的管理）	
+		
+		4）、AutowireBeanFactoryObjectPostProcessor
+				->	postProcess();
+			
+		5）、重写适配器三个方法的执行时机。
+		
+			AbstractConfiguredSecurityBuilder
+				->init()
+					->	Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
+
+						for (SecurityConfigurer<O, B> configurer : configurers) {
+							configurer.init((B) this);
+						}
+						
+						-> WebSecurityConfigurerAdapter
+						
+							-> init()	
+							
+			InMemoryUserDetailsManagerConfigurer // 创建一个基于内存的用户信息管理器
+			authenticationManager(创建的认证管理器)  -> ProviderManager				
+		
+		6）、认证源码：
+			
+			AbstractAuthenticationProcessingFilter
+				-> authResult = attemptAuthentication(request, response);
+					-> UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
+							username, password);	//根据表单提交的信息装载成为一个 UsernamePasswordAuthenticationToken			
+							
+							
+		7）、分布式的认证	的授权：
+		
+			SpringSecurityOAuth2【客户端、授权服务、认证服务】
+			
+			1）、四种模式：
+				四种模式：
+					-授权码模式
+						获取授权码【GET】：/oauth/authorize?client_id=c1&response_type=code&scope=all&redirect_uri=http://www.baidu.com
+						获取令牌【POST】：/oauth/token  grant_type=authorization_code
+					-简化模式【GET】：/oauth/authorize?client_id=c1&response_type=token&scope=all&redirect_uri=http://www.baidu.com
+						该模式只要用户给客户端授权后，直接返回令牌信息。场景：web浏览器
+					-密码模式【POST】：/oauth/token?&client_id=c1&grant_type=password&scope=all&username=lxm&password=123
+						场景：自己开发的app
+					-客户端模式【POST】：/oauth/token?&client_id=c1&grant_type=client_credentials&client_secret=123
+						
+			2）、获取令牌：/oauth/token
+			3）、刷新令牌【POST】http://appId:123@localhost:8081/oauth/token?grant_type=refresh_token&refresh_token=ee0ae261-0135-4dc0-8ac5-c9b9febf258b
+		8）：资源服务器：
+			基于yaml对接认证服务器
+				security:
+				  oauth2:
+				    client:
+				      client-id: appId
+				      client-secret: 123
+				      access-token-uri: http:localhost:8081/oauth/token
+				      user-authorization-uri: http:localhost:8081/oauth/authorize
+				    resource:
+				      user-info-uri: http:localhost:8081/oauth/check_token	
+		
+		9）、jwt令牌：
+			
+				

@@ -1,0 +1,41 @@
+server:
+  port: 8086
+  
+spring:
+  application:
+    name: web-client  
+  demo:
+    swagger:
+      back-page: com.lxm.web.client.ctroller
+      api-title: 李晓明的个人文档
+      api-version: v1.0
+      group-name: lxm
+      api-description: 这是一个测试demo
+  zipkin:
+    base-url: http://127.0.0.1:8075
+  sleuth:
+    sampler:
+      probability: 1.0
+      
+    
+eureka:
+  instance:
+    hostname: ${spring.cloud.client.ip-address}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone:  http://localhost:9001/eureka/    
+    register-with-eureka: true 
+  
+feign:
+  hystrix:
+    enabled: true #开启基于feign技术的  hystrix  
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'      

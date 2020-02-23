@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.lxm.springcloud</groupId>
+	<artifactId>spring-cloud-demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<properties>
+		<spring-cloud-demo-version>0.0.1-SNAPSHOT</spring-cloud-demo-version>
+		 <mysql.version>5.1.44</mysql.version>
+	</properties>
+	
+	<developers>
+		<developer>
+			<name>lxm</name>
+			<email>2352676808@qq.com</email>
+		</developer>
+	</developers>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.2.RELEASE</version>
+	</parent>
+
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		
+	</dependencies>
+
+
+	<!-- import spring cloud dependencies -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Hoxton.SR1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>springcloud-security-oauth2</module>
+		<module>spring-context</module>
+		<module>springcloud-eureka-server</module>
+		<module>user-service-api</module>
+		<module>user-service</module>
+		<module>spring-client-web</module>
+		<module>spring-cloud-swagger2</module>
+		<module>springcloud-turbine-server</module>
+		<module>springcloud-zipkin-server</module>
+	</modules>
+</project>
